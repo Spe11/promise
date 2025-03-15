@@ -16,9 +16,11 @@ func CreatePromise[T any]() Promise[T] {
 
 func (p *Promise[T]) Resolve(data T) {
 	p.channel <- result[T]{Data: data}
+	close(p.channel)
 }
 func (p *Promise[T]) Reject(err error) {
 	p.channel <- result[T]{Err: err}
+	close(p.channel)
 }
 func (p *Promise[T]) OnSuccess(callback func(data T)) *Promise[T] {
 	p.getResult()
